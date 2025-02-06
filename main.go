@@ -2,7 +2,8 @@ package main
 
 import (
 	"github.com/kataras/iris/v12"
-	"net/http"
+	"note-iris/src/application"
+	"note-iris/src/router"
 )
 
 func main() {
@@ -12,15 +13,11 @@ func main() {
 	// 设置日志打印级别
 	app.Logger().SetLevel("debug")
 
-	// Hello World
-	app.Get("/hello/{name}", func(ctx iris.Context) {
-		name := ctx.Params().Get("name")
-		ctx.JSON(iris.Map{
-			"code":    http.StatusOK,
-			"message": "Hello, " + name,
-		})
-	})
-
+	// 注册路由
+	router.RegisterRouter(app)
 	// 启动服务
-	app.Run(iris.Addr(":18098"), iris.WithCharset("UTF-8"))
+	app.Listen(
+		application.App.Server.Host+":"+application.App.Server.Port,
+		iris.WithCharset("UTF-8"),
+	)
 }
